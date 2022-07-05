@@ -1,31 +1,37 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import BlogList from "./blog-list";
 
 const HomePage = () => {
-  const [blogs, setBlogs] = useState([
-    {
-      title: "Internet",
-      body: "lorem ipsum",
-      author: "zein",
-      id: 1,
-    },
-    {
-      title: "Download",
-      body: "lorem ipsum",
-      author: "steven",
-      id: 2,
-    },
-    {
-      title: "Manager",
-      body: "lorem ipsum",
-      author: "zein",
-      id: 3,
-    },
-  ]);
+  const [blogs, setBlogs] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    setTimeout(() => {
+      fetch("http://localhost:8000/blogs")
+        .then((res) => {
+          if (!res.ok) {
+            throw Error("Error kocak");
+          }
+          return res.json();
+        })
+        .then((data) => {
+          setBlogs(data);
+          setIsLoading(false);
+          setError(null);
+        })
+        .catch((err) => {
+          setIsLoading(false);
+          setError(err.message);
+        });
+    }, 1000);
+  }, []);
 
   return (
-    <div className="blog-list">
-      <BlogList blogs={blogs} title="All title" />
+    <div className="home">
+      {error && <div>{error}</div>}
+      {isLoading && <div>Loading...</div>}
+      {blogs && <BlogList blogs={blogs} title="All title" key={blogs.id} />}
     </div>
   );
 };
