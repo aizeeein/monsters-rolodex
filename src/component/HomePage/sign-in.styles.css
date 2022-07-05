@@ -1,0 +1,15 @@
+.title {
+    justify-content: center;
+    display: flex;
+}
+
+.btn {
+    justify-content: center;
+    display: flex;
+}
+
+.inputt {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
